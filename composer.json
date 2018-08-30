@@ -1,5 +1,5 @@
 {
-    "name": "nymediaas/aera-checkout",
+    "name": "nymedia/aera-checkout",
     "description": "PHP SDK for Aera Payments Gateway",
     "type": "library",
     "require": {
