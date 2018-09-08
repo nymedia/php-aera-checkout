@@ -118,10 +118,26 @@ class AeraCheckoutConnect implements AeraCheckoutConnectInterface {
    */
   private function arrayToXML(array $data, &$xml_data)
   {
-    foreach ($data as $key => $value ) {
+    foreach ($data as $key => $value) {
       if (is_array($value)) {
-        $sub = $xml_data->addChild($key);
-        $this->arrayToXML($value, $sub);
+        $child = TRUE;
+        foreach ($value as $k => $v) {
+          if (!is_numeric($k) || !is_array($v)) {
+            $child = FALSE;
+            break;
+          }
+        }
+
+        if ($child) {
+          foreach ($value as $k => $v) {
+            $sub = $xml_data->addChild($key);
+            $this->arrayToXML($v, $sub);
+          }
+        }
+        else {
+          $sub = $xml_data->addChild($key);
+          $this->arrayToXML($value, $sub);
+        }
       } else {
         $xml_data->addChild("$key", htmlspecialchars("$value"));
       }
