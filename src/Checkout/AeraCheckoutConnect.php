@@ -3,24 +3,30 @@
 namespace AeraCheckoutApi\Checkout;
 
 class AeraCheckoutConnect implements AeraCheckoutConnectInterface {
-  const BASE_URL = 'https://ips-preprod.ihost.com';
-  const BASE_PORT = '50443';
+  const BASE_URL_TEST = 'https://ips-preprod.ihost.com';
+  const BASE_PORT_TEST = '50443';
+  const BASE_URL_PROD = 'https://ips.ihost.com';
+  const BASE_PORT_PROD = '50443';
 
   protected $certPath;
   protected $certPass;
   protected $settings;
+  protected $testMode = TRUE;
 
   public function __construct($cert_path, $cert_pass = '', array $settings = array())
   {
     $this->certPath = $cert_path;
     $this->certPass = $cert_pass;
     $this->settings = $settings;
+    if (isset($this->settings) && !$this->settings['test_mode']) {
+      $this->testMode = FALSE;
+    }
   }
 
   public function getBaseUrl($service = '')
   {
-    $base_url = self::BASE_URL;
-    $base_url .= !empty(self::BASE_PORT) ? ':' . self::BASE_PORT : '';
+    $base_url = $this->testMode ? self::BASE_URL_TEST : self::BASE_URL_PROD;
+    $base_url .= $this->testMode ? ':' . self::BASE_PORT_TEST : ':' . self::BASE_PORT_PROD;
     $base_url .= !empty($service) ? '/' . $service : '';
     return $base_url;
   }
